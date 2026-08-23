@@ -36,3 +36,18 @@ npm run dev
 - Base: `/api`
 - Health: `GET /api/health`
 - Swagger UI: `GET /api/docs`
+- Auth: `POST /api/auth/register`, `POST /api/auth/login`
+- Carrito: `GET /api/cart/me`, `POST /api/cart/items`, `PATCH /api/cart/items/:itemId`, `DELETE /api/cart/items/:itemId`, `DELETE /api/cart/me`
+- Checkout: `POST /api/checkout`, `GET /api/orders/me`
+- Pagos: `POST /api/payments`, `GET /api/payments/pending`, `PATCH /api/payments/:paymentId/verify`
+- Configuración (admin): `GET /api/configurations`, `POST /api/configurations`
+
+## Flujo implementado (Sprint 1 backend)
+
+1. Cliente autenticado agrega productos al carrito persistente.
+2. Cliente hace checkout en contado o cuotas.
+3. Sistema crea pedido, ítems de pedido y factura correlativa por año.
+4. Si es por cuotas, se generan cuotas con vencimiento y monto en USD/Bs.
+5. Cliente registra pago.
+6. Admin/Vendedor confirma pago.
+7. Al confirmar (contado o primera cuota), se marca pedido como pagado, se descuenta inventario y se crea/actualiza envío en estado `preparando`.

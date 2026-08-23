@@ -17,4 +17,5 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   bcvRate: Number(process.env.BCV_RATE || 0),
+  dbSync: process.env.DB_SYNC === 'true',
 };

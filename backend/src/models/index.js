@@ -123,19 +123,33 @@ export const Configuration = sequelize.define('Configuration', {
 }, { tableName: 'configurations' });
 
 Category.belongsTo(Category, { as: 'parent', foreignKey: 'parentId' });
+Category.hasMany(Product, { foreignKey: 'categoryId' });
 Product.belongsTo(Category, { foreignKey: 'categoryId' });
+Supplier.hasMany(Product, { foreignKey: 'supplierId' });
 Product.belongsTo(Supplier, { foreignKey: 'supplierId' });
+User.hasOne(Cart, { foreignKey: 'userId' });
 Cart.belongsTo(User, { foreignKey: 'userId' });
+Cart.hasMany(CartItem, { foreignKey: 'cartId' });
 CartItem.belongsTo(Cart, { foreignKey: 'cartId' });
+Product.hasMany(CartItem, { foreignKey: 'productId' });
 CartItem.belongsTo(Product, { foreignKey: 'productId' });
+User.hasMany(Order, { foreignKey: 'userId' });
 Order.belongsTo(User, { foreignKey: 'userId' });
+Order.hasMany(OrderItem, { foreignKey: 'orderId' });
 OrderItem.belongsTo(Order, { foreignKey: 'orderId' });
+Product.hasMany(OrderItem, { foreignKey: 'productId' });
 OrderItem.belongsTo(Product, { foreignKey: 'productId' });
+Order.hasMany(Payment, { foreignKey: 'orderId' });
 Payment.belongsTo(Order, { foreignKey: 'orderId' });
+Installment.hasMany(Payment, { foreignKey: 'installmentId' });
 Payment.belongsTo(Installment, { foreignKey: 'installmentId' });
+Order.hasMany(Installment, { foreignKey: 'orderId' });
 Installment.belongsTo(Order, { foreignKey: 'orderId' });
+Order.hasOne(Shipment, { foreignKey: 'orderId' });
 Shipment.belongsTo(Order, { foreignKey: 'orderId' });
+Product.hasMany(InventoryMovement, { foreignKey: 'productId' });
 InventoryMovement.belongsTo(Product, { foreignKey: 'productId' });
+User.hasMany(InventoryMovement, { foreignKey: 'userId' });
 InventoryMovement.belongsTo(User, { foreignKey: 'userId' });
 
 export async function syncDb() {
