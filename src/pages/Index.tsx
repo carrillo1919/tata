@@ -60,16 +60,16 @@ const Index = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-[11px] font-semibold tracking-[0.3em] uppercase text-white/70 mb-6"
             >
-              Curated for Considered Living
+              Tata · Productos destacados
             </motion.p>
             <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl xl:text-9xl text-white mb-8 leading-[0.9] tracking-tight">
-              Objects of
+              Todo para tu
               <br />
-              <span className="italic font-normal">Quiet Beauty</span>
+              <span className="italic font-normal">día a día</span>
             </h1>
             <p className="text-base md:text-lg text-white/80 mb-10 leading-relaxed max-w-lg">
-              Handcrafted home goods and lifestyle pieces designed to bring
-              warmth and intention to everyday moments.
+              Descubre artículos cotidianos, vasos, termos, accesorios, relojes y colonias
+              seleccionados para compras rápidas y seguras.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
@@ -78,7 +78,7 @@ const Index = () => {
                 className="rounded-none px-10 py-6 text-sm tracking-[0.15em] uppercase btn-premium"
               >
                 <Link to="/products">
-                  Shop Now
+                  Ver catálogo
                   <ArrowRight className="ml-3 w-4 h-4" />
                 </Link>
               </Button>
@@ -130,14 +130,14 @@ const Index = () => {
               className="md:py-12"
             >
               <p className="text-[11px] font-semibold tracking-[0.3em] uppercase text-primary mb-4">
-                Featured Collection
+                Categoría destacada
               </p>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-[0.95]">
                 {featuredCollection.name}
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-md">
-                {featuredCollection.description}. Discover sculptural forms that cast warmth and shadow, 
-                designed to transform any space into a sanctuary of light.
+                {featuredCollection.description}. Encuentra productos prácticos,
+                disponibles y listos para entrega.
               </p>
               <Button
                 asChild
@@ -145,7 +145,7 @@ const Index = () => {
                 className="rounded-none px-10 py-6 text-sm tracking-[0.15em] uppercase btn-premium"
               >
                 <Link to={`/products?collection=${featuredCollection.slug}`}>
-                  Shop {featuredCollection.name}
+                  Ver {featuredCollection.name}
                   <ArrowRight className="ml-3 w-4 h-4" />
                 </Link>
               </Button>
@@ -165,17 +165,17 @@ const Index = () => {
               transition={{ duration: 0.6 }}
             >
               <p className="text-[11px] font-semibold tracking-[0.3em] uppercase text-primary mb-3">
-                Just Arrived
+                Destacados
               </p>
               <h2 className="font-serif text-4xl md:text-5xl text-foreground">
-                Latest Products
+                Productos recientes
               </h2>
             </motion.div>
             <Link
               to="/products"
               className="hidden md:flex items-center gap-3 text-sm font-medium tracking-[0.1em] uppercase text-muted-foreground hover:text-foreground transition-colors group"
             >
-              View All
+              Ver todo
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           </div>
@@ -212,7 +212,7 @@ const Index = () => {
               Browse By
             </p>
             <h2 className="font-serif text-4xl md:text-5xl text-foreground">
-              Collections
+              Categorías
             </h2>
           </motion.div>
 
@@ -275,17 +275,15 @@ const Index = () => {
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] as const }}
           >
             <p className="text-[11px] font-semibold tracking-[0.3em] uppercase text-primary mb-6">
-              About Us
+              Nosotros
             </p>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-foreground leading-[1.3] mb-8">
-              We believe in the beauty of slow living—in objects made with care,
-              materials that age gracefully, and spaces that invite{" "}
-              <span className="italic">pause</span>.
+              En Tata combinamos productos funcionales y precios accesibles para
+              facilitar tu compra diaria con una experiencia clara y rápida.
             </h2>
             <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10">
-              Every piece in our collection is selected for its material integrity, 
-              its maker's story, and its ability to endure beautifully. We work with 
-              artisans who share our commitment to craft and sustainability.
+              Nuestro catálogo se actualiza de forma continua para ofrecer productos
+              útiles, disponibilidad visible y procesos de compra cada vez más simples.
             </p>
             <Button
               asChild
@@ -294,7 +292,7 @@ const Index = () => {
               className="rounded-none px-10 py-6 text-sm tracking-[0.15em] uppercase"
             >
               <Link to="/about">
-                Read Our Story
+                Conoce más
                 <ArrowRight className="ml-3 w-4 h-4" />
               </Link>
             </Button>
@@ -313,13 +311,13 @@ const Index = () => {
             className="text-center mb-12"
           >
             <p className="text-[11px] font-semibold tracking-[0.3em] uppercase text-primary mb-3">
-              Follow Us
+              Comunidad
             </p>
             <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
-              @maisonhome
+              @tata.ve
             </h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Join our community and get inspired by curated spaces and behind-the-scenes moments.
+              Síguenos para conocer promociones, nuevos ingresos y productos destacados.
             </p>
           </motion.div>
 

@@ -1,73 +1,49 @@
-# Welcome to your Lovable project
+# Tata Ecommerce (Frontend)
 
-## Project info
+Aplicación SPA en React + TypeScript para el catálogo y flujo de compra de Tata.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Alcance por sprint
 
-## How can I edit this code?
+### Sprint 1 (core)
+- Autenticación/roles
+- Catálogo de productos
+- Carrito persistente
+- Checkout contado
+- Inventario básico
 
-There are several ways of editing your application.
+### Sprint 2
+- Cuotas
+- Verificación de pagos
+- Envíos
+- Facturación
 
-**Use Lovable**
+### Sprint 3
+- Reportes
+- Notificaciones
+- Hardening de seguridad
+- Documentación final
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Integración API dólar oficial
 
-Changes made via Lovable will be committed automatically to this repo.
+Se integró consumo de DolarAPI para trazabilidad USD↔Bs en checkout:
 
-**Use your preferred IDE**
+- `GET https://ve.dolarapi.com/v1/dolares/oficial`
+- `GET https://ve.dolarapi.com/v1/estado`
+- `GET https://ve.dolarapi.com/v1/historicos/dolares/oficial`
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+La interfaz muestra:
+- tasa oficial actual (`promedio`)
+- fecha de actualización
+- estado de la API
+- histórico reciente
+- conversión estimada del total del pedido a Bs
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Scripts
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
+npm run lint
+npm run test
+npm run build
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

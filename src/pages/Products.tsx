@@ -114,7 +114,7 @@ const Products = () => {
               {currentCollection ? "Collection" : "Shop"}
             </p>
             <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white mb-3 leading-[0.95]">
-              {currentCollection ? currentCollection.name : "All Pieces"}
+              {currentCollection ? currentCollection.name : "Todo el catálogo"}
             </h1>
             {currentCollection && (
               <p className="text-base text-white/70 max-w-lg">
@@ -196,7 +196,7 @@ const Products = () => {
               <div className="flex items-center justify-between mb-10">
                 <p className="text-sm text-muted-foreground">
                   {filteredAndSortedProducts.length}{" "}
-                  {filteredAndSortedProducts.length === 1 ? "piece" : "pieces"}
+                  {filteredAndSortedProducts.length === 1 ? "producto" : "productos"}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
@@ -212,17 +212,17 @@ const Products = () => {
           ) : (
             <div className="text-center py-28">
               <p className="font-serif text-2xl text-muted-foreground mb-4">
-                No pieces found
+                No se encontraron productos
               </p>
               <p className="text-muted-foreground mb-8">
-                This collection is currently being curated.
+                Esta categoría está siendo actualizada.
               </p>
               <Button
                 asChild
                 variant="outline"
                 className="rounded-none px-8 text-sm tracking-[0.1em] uppercase"
               >
-                <Link to="/products">View All Pieces</Link>
+                <Link to="/products">Ver todo el catálogo</Link>
               </Button>
             </div>
           )}
@@ -247,18 +247,18 @@ const Products = () => {
             transition={{ duration: 0.8 }}
           >
             <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/50 mb-4">
-              Need Assistance?
+              ¿Necesitas ayuda?
             </p>
             <h2 className="font-serif text-3xl md:text-5xl text-white mb-6">
-              We're Here to Help
+              Estamos para ayudarte
             </h2>
             <Button
               asChild
               size="lg"
               className="rounded-none px-10 py-6 text-sm tracking-[0.15em] uppercase bg-white text-charcoal hover:bg-white/90"
             >
-              <a href="mailto:hello@maison.com">
-                Contact Us
+              <a href="mailto:ventas@tata.com">
+                Contáctanos
                 <ArrowRight className="ml-3 w-4 h-4" />
               </a>
             </Button>

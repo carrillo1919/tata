@@ -93,7 +93,7 @@ const About = () => {
                 <span className="italic">for Meaning</span>
               </h3>
               <p className="text-muted-foreground leading-[1.8] mb-5">
-                Maison began as a personal quest—a search for objects that felt
+                Tata nació como una iniciativa local—a search for objects that felt
                 meaningful in an age of disposable everything. After years of
                 collecting and curating, we opened our doors to share these
                 discoveries with others who value craftsmanship over convenience.
@@ -335,7 +335,7 @@ const About = () => {
               size="lg"
               className="rounded-none px-12 py-6 text-sm tracking-[0.15em] uppercase bg-white text-charcoal hover:bg-white/90"
             >
-              <a href="mailto:hello@maison.com">
+              <a href="mailto:ventas@tata.com">
                 Get in Touch
                 <ArrowRight className="ml-3 w-4 h-4" />
               </a>

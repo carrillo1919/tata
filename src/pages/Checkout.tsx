@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { useCart } from "@/hooks/useCart";
+import { DollarRatePanel } from "@/components/DollarRatePanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -97,16 +98,15 @@ const Checkout = () => {
         </div>
       </div>
 
-      {/* Coming Soon Banner */}
+      {/* Payment info */}
       <div className="bg-primary/5 border-b border-primary/10">
         <div className="container-full py-4">
           <div className="flex items-center gap-3 text-sm">
             <AlertCircle className="w-5 h-5 text-primary" />
             <p>
-              <span className="font-medium">Online checkout coming soon.</span>{" "}
+              <span className="font-medium">Checkout contado habilitado.</span>{" "}
               <span className="text-muted-foreground">
-                Please submit your order request below and we'll contact you to
-                complete your purchase.
+                Completa tu pedido y nuestro equipo verificará el pago para confirmar despacho.
               </span>
             </p>
           </div>
@@ -322,6 +322,8 @@ const Checkout = () => {
               <div className="bg-linen p-8 lg:sticky lg:top-28">
                 <h2 className="font-serif text-2xl mb-6">Order Summary</h2>
 
+                <DollarRatePanel amountUsd={total} />
+
                 {/* Items */}
                 <div className="space-y-4 mb-6">
                   {items.map((item) => (
@@ -374,12 +376,12 @@ const Checkout = () => {
                     Questions?
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Email us at{" "}
+                    Escríbenos a{" "}
                     <a
-                      href="mailto:hello@maison.com"
+                      href="mailto:ventas@tata.com"
                       className="text-foreground underline"
                     >
-                      hello@maison.com
+                      ventas@tata.com
                     </a>
                   </p>
                 </div>
