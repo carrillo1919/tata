@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Tata Backend API
+  version: 0.1.0
+servers:
+  - url: /api
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /auth/register:
+    post:
+      summary: Register user
+      responses:
+        '201':
+          description: Created
+  /auth/login:
+    post:
+      summary: Login user
+      responses:
+        '200':
+          description: OK
+  /categories:
+    get:
+      summary: List categories
+      responses:
+        '200':
+          description: OK
+  /products:
+    get:
+      summary: List products
+      responses:
+        '200':
+          description: OK
