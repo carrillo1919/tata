@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Tata Backend API
+  version: 0.1.0
+servers:
+  - url: /api
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /auth/register:
+    post:
+      summary: Register user
+      responses:
+        '201':
+          description: Created
+  /auth/login:
+    post:
+      summary: Login user
+      responses:
+        '200':
+          description: OK
+  /categories:
+    get:
+      summary: List categories
+      responses:
+        '200':
+          description: OK
+  /products:
+    get:
+      summary: List products
+      responses:
+        '200':
+          description: OK
+  /cart/me:
+    get:
+      summary: Get current user cart
+      responses:
+        '200':
+          description: OK
+  /cart/items:
+    post:
+      summary: Add item to cart
+      responses:
+        '201':
+          description: Created
+  /checkout:
+    post:
+      summary: Create order from cart
+      responses:
+        '201':
+          description: Created
+  /orders/me:
+    get:
+      summary: List current user orders
+      responses:
+        '200':
+          description: OK
+  /payments:
+    post:
+      summary: Register payment
+      responses:
+        '201':
+          description: Created
+  /payments/pending:
+    get:
+      summary: List pending payments (admin or vendedor)
+      responses:
+        '200':
+          description: OK
+  /payments/{paymentId}/verify:
+    patch:
+      summary: Verify payment (admin or vendedor)
+      responses:
+        '200':
+          description: OK
+  /configurations:
+    get:
+      summary: List system configs (admin)
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Set system config (admin)
+      responses:
+        '201':
+          description: Created

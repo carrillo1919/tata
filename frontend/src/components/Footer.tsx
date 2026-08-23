@@ -14,10 +14,10 @@ export const Footer = () => {
                 to="/"
                 className="font-serif text-3xl md:text-4xl tracking-tight text-background"
               >
-                Maison
+                Tata
               </Link>
               <p className="mt-3 text-sm text-background/50 leading-relaxed max-w-xs">
-                Curated home objects and lifestyle pieces for considered living.
+                Catálogo táctico de artículos cotidianos, vasos, termos, accesorios, relojes y colonias.
               </p>
             </div>
 
@@ -77,7 +77,7 @@ export const Footer = () => {
                   to="/products"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  Shop All
+                  Catálogo
                 </Link>
               </li>
               <li>
@@ -85,7 +85,7 @@ export const Footer = () => {
                   to="/about"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  Our Story
+                  Nosotros
                 </Link>
               </li>
               <li>
@@ -93,7 +93,7 @@ export const Footer = () => {
                   to="/cart"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  Shopping Bag
+                  Carrito
                 </Link>
               </li>
             </ul>
@@ -110,7 +110,7 @@ export const Footer = () => {
                   href="#"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  Shipping & Returns
+                  Envíos y devoluciones
                 </a>
               </li>
               <li>
@@ -118,7 +118,7 @@ export const Footer = () => {
                   href="#"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  Care Guide
+                  Guía de uso
                 </a>
               </li>
               <li>
@@ -126,7 +126,7 @@ export const Footer = () => {
                   href="#"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  FAQ
+                  Preguntas frecuentes
                 </a>
               </li>
             </ul>
@@ -140,15 +140,15 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="mailto:hello@maison.com"
+                  href="mailto:ventas@tata.com"
                   className="text-sm text-background/60 hover:text-background transition-colors duration-300"
                 >
-                  hello@maison.com
+                  ventas@tata.com
                 </a>
               </li>
               <li>
                 <p className="text-sm text-background/40 leading-relaxed">
-                  Mon–Fri, 9am–6pm CET
+                  Lun–Vie, 8am–6pm VET
                 </p>
               </li>
             </ul>
@@ -160,7 +160,7 @@ export const Footer = () => {
       <div className="border-t border-background/10">
         <div className="container-full py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-background/30">
-            © {new Date().getFullYear()} Maison. All rights reserved.
+            © {new Date().getFullYear()} Tata. Todos los derechos reservados.
           </p>
           <div className="flex gap-8">
             <a

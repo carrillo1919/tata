@@ -49,7 +49,7 @@ export const Header = () => {
             to="/"
             className="font-serif text-2xl md:text-3xl tracking-tight text-foreground hover:text-primary transition-colors duration-300"
           >
-            Maison
+            Tata
           </Link>
 
           {/* Desktop Navigation */}
@@ -91,14 +91,14 @@ export const Header = () => {
               to="/products"
               className="text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300 link-underline"
             >
-              Shop All
+              Catálogo
             </Link>
 
             <Link
               to="/about"
               className="text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300 link-underline"
             >
-              About
+              Nosotros
             </Link>
           </div>
 
@@ -213,9 +213,9 @@ export const Header = () => {
                 </div>
                 <div className="pt-6 border-t border-border space-y-1">
                   {[
-                    { to: "/products", label: "Shop All" },
-                    { to: "/about", label: "About" },
-                    { to: "/cart", label: "Shopping Bag" },
+                    { to: "/products", label: "Catálogo" },
+                    { to: "/about", label: "Nosotros" },
+                    { to: "/cart", label: "Carrito" },
                   ].map((link, i) => (
                     <motion.div
                       key={link.to}

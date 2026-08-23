@@ -1,73 +1,48 @@
-# Welcome to your Lovable project
+# Tata - Monorepo
 
-## Project info
+Este repositorio ahora está separado por capas:
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+- `/frontend`: aplicación SPA actual (React + Vite + TypeScript).
+- `/backend`: API REST inicial (Node.js + Express + Sequelize + PostgreSQL, ES Modules).
 
-## How can I edit this code?
+## Estructura
 
-There are several ways of editing your application.
+```text
+/home/runner/work/tata/tata
+├── frontend
+└── backend
+```
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Frontend
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+cd /home/runner/work/tata/tata/frontend
+npm install
+npm run dev
+npm run lint
+npm run test
+npm run build
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Backend
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```sh
+cd /home/runner/work/tata/tata/backend
+cp .env.example .env
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Variables requeridas en backend:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- `DATABASE_URL`
+- `JWT_SECRET`
 
-**Use GitHub Codespaces**
+Endpoints base:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- `GET /api/health`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/categories`
+- `GET /api/products`
+- `GET /api/docs`
