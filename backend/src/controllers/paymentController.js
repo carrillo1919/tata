@@ -7,10 +7,13 @@ import {
   Payment,
   Product,
   Shipment,
+  User,
 } from '../models/index.js';
 import { createPaymentSchema, verifyPaymentSchema } from '../validators/paymentValidator.js';
 import { AppError } from '../utils/errors.js';
 import { getBcvRate } from '../utils/config.js';
+import { assertCanReadOrder } from '../utils/access.js';
+import { notifyUser } from '../utils/notifications.js';
 
 async function applyInventoryAndShipment(order, verifiedByUserId, transaction) {
   const orderItems = await OrderItem.findAll({ where: { orderId: order.id }, include: [Product], transaction });
@@ -47,6 +50,10 @@ async function applyInventoryAndShipment(order, verifiedByUserId, transaction) {
   if (shipment.status !== 'preparando') {
     await shipment.update({ status: 'preparando' }, { transaction });
   }
+
+  if (order.status !== 'preparando_envio') {
+    await order.update({ status: 'preparando_envio' }, { transaction });
+  }
 }
 
 export async function createPayment(req, res, next) {
@@ -63,6 +70,17 @@ export async function createPayment(req, res, next) {
       if (!installment || installment.orderId !== order.id) {
         throw new AppError('Cuota no encontrada', 404);
       }
+
+      if (Number(payload.amountUsd) < Number(installment.amountUsd)) {
+        throw new AppError('Monto insuficiente para cubrir la cuota', 400);
+      }
+    }
+
+    const duplicateReference = await Payment.findOne({
+      where: { orderId: order.id, referenceNumber: payload.referenceNumber },
+    });
+    if (duplicateReference) {
+      throw new AppError('La referencia de pago ya fue registrada para este pedido', 409);
     }
 
     const bcvRate = await getBcvRate();
@@ -86,6 +104,10 @@ export async function listPendingPayments(_req, res, next) {
   try {
     const payments = await Payment.findAll({
       where: { status: 'pendiente' },
+      include: [
+        { model: Order, attributes: ['id', 'invoiceNumber', 'status', 'paymentType', 'totalUsd'] },
+        { model: Installment, attributes: ['id', 'installmentNumber', 'dueDate', 'status', 'amountUsd', 'amountBs'] },
+      ],
       order: [['createdAt', 'DESC']],
       limit: 200,
     });
@@ -154,12 +176,55 @@ export async function verifyPayment(req, res, next) {
           await applyInventoryAndShipment(order, req.user.id, transaction);
         }
       }
+
+      await notifyUser({
+        userId: order.userId,
+        type: 'payment_verified',
+        title: `Pago confirmado para pedido ${order.invoiceNumber}`,
+        message: 'Tu pago fue confirmado y tu pedido está en proceso.',
+        metadata: { paymentId: payment.id, orderId: order.id },
+        transaction,
+      });
+    } else {
+      const order = await Order.findByPk(payment.orderId, { transaction });
+      if (order) {
+        await notifyUser({
+          userId: order.userId,
+          type: 'payment_rejected',
+          title: `Pago rechazado para pedido ${order.invoiceNumber}`,
+          message: 'Tu pago fue rechazado. Revisa los datos e intenta nuevamente.',
+          metadata: { paymentId: payment.id, orderId: order.id },
+          transaction,
+        });
+      }
     }
+
+    await payment.update({ verifiedByUserId: req.user.id, verifiedAt: new Date() }, { transaction });
 
     await transaction.commit();
     res.json({ ok: true });
   } catch (error) {
     await transaction.rollback();
+    next(error);
+  }
+}
+
+export async function listOrderPayments(req, res, next) {
+  try {
+    const order = await Order.findByPk(req.params.orderId);
+    assertCanReadOrder(req.user, order);
+
+    const payments = await Payment.findAll({
+      where: { orderId: order.id },
+      include: [
+        { model: Installment, attributes: ['id', 'installmentNumber', 'dueDate', 'status'] },
+        { model: User, as: 'verifiedBy', attributes: ['id', 'name', 'email'] },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    res.json({ ok: true, data: payments });
+  } catch (error) {
     next(error);
   }
 }

@@ -66,6 +66,7 @@ export const Order = sequelize.define('Order', {
   totalUsd: { type: DataTypes.DECIMAL(12, 2), allowNull: false, defaultValue: 0 },
   bcvRate: { type: DataTypes.DECIMAL(12, 4), allowNull: false, defaultValue: 0 },
   paymentType: { type: DataTypes.ENUM('contado', 'cuotas'), allowNull: false, defaultValue: 'contado' },
+  billingData: { type: DataTypes.JSONB },
 }, { tableName: 'orders' });
 
 export const OrderItem = sequelize.define('OrderItem', {
@@ -87,6 +88,7 @@ export const Payment = sequelize.define('Payment', {
   amountBs: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
   bcvRate: { type: DataTypes.DECIMAL(12, 4), allowNull: false },
   status: { type: DataTypes.ENUM('pendiente', 'confirmado', 'rechazado'), allowNull: false, defaultValue: 'pendiente' },
+  verifiedAt: { type: DataTypes.DATE },
 }, { tableName: 'payments' });
 
 export const Installment = sequelize.define('Installment', {
@@ -106,7 +108,9 @@ export const Shipment = sequelize.define('Shipment', {
     defaultValue: 'preparando',
   },
   trackingNumber: { type: DataTypes.STRING },
+  carrier: { type: DataTypes.STRING },
   estimatedDeliveryDate: { type: DataTypes.DATEONLY },
+  deliveredAt: { type: DataTypes.DATE },
 }, { tableName: 'shipments' });
 
 export const InventoryMovement = sequelize.define('InventoryMovement', {
@@ -121,6 +125,15 @@ export const Configuration = sequelize.define('Configuration', {
   key: { type: DataTypes.STRING, allowNull: false, unique: true },
   value: { type: DataTypes.JSONB, allowNull: false },
 }, { tableName: 'configurations' });
+
+export const Notification = sequelize.define('Notification', {
+  id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+  type: { type: DataTypes.STRING, allowNull: false },
+  title: { type: DataTypes.STRING, allowNull: false },
+  message: { type: DataTypes.TEXT, allowNull: false },
+  metadata: { type: DataTypes.JSONB },
+  readAt: { type: DataTypes.DATE },
+}, { tableName: 'notifications' });
 
 Category.belongsTo(Category, { as: 'parent', foreignKey: 'parentId' });
 Category.hasMany(Product, { foreignKey: 'categoryId' });
@@ -141,6 +154,8 @@ Product.hasMany(OrderItem, { foreignKey: 'productId' });
 OrderItem.belongsTo(Product, { foreignKey: 'productId' });
 Order.hasMany(Payment, { foreignKey: 'orderId' });
 Payment.belongsTo(Order, { foreignKey: 'orderId' });
+User.hasMany(Payment, { as: 'verifiedPayments', foreignKey: 'verifiedByUserId' });
+Payment.belongsTo(User, { as: 'verifiedBy', foreignKey: 'verifiedByUserId' });
 Installment.hasMany(Payment, { foreignKey: 'installmentId' });
 Payment.belongsTo(Installment, { foreignKey: 'installmentId' });
 Order.hasMany(Installment, { foreignKey: 'orderId' });
@@ -151,6 +166,8 @@ Product.hasMany(InventoryMovement, { foreignKey: 'productId' });
 InventoryMovement.belongsTo(Product, { foreignKey: 'productId' });
 User.hasMany(InventoryMovement, { foreignKey: 'userId' });
 InventoryMovement.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Notification, { foreignKey: 'userId' });
+Notification.belongsTo(User, { foreignKey: 'userId' });
 
 export async function syncDb() {
   await sequelize.sync();

@@ -77,6 +77,78 @@ paths:
       responses:
         '200':
           description: OK
+  /payments/orders/{orderId}:
+    get:
+      summary: List payments for one order (owner/admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /orders/{orderId}/installments:
+    get:
+      summary: List installments for one order (owner/admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /shipments/me:
+    get:
+      summary: List current user shipments
+      responses:
+        '200':
+          description: OK
+  /shipments:
+    get:
+      summary: List shipments (admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /shipments/{shipmentId}/status:
+    patch:
+      summary: Update shipment status (admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /invoices/{orderId}:
+    get:
+      summary: Get invoice payload for an order
+      responses:
+        '200':
+          description: OK
+  /invoices/{orderId}/pdf:
+    get:
+      summary: Download invoice PDF
+      responses:
+        '200':
+          description: OK
+  /reports/sales:
+    get:
+      summary: Sales report with export csv/json (admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /reports/collections:
+    get:
+      summary: Collections report with export csv/json (admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /reports/inventory:
+    get:
+      summary: Inventory report with export csv/json (admin/vendedor)
+      responses:
+        '200':
+          description: OK
+  /notifications/me:
+    get:
+      summary: List current user notifications
+      responses:
+        '200':
+          description: OK
+  /notifications/{notificationId}/read:
+    patch:
+      summary: Mark notification as read
+      responses:
+        '200':
+          description: OK
   /configurations:
     get:
       summary: List system configs (admin)
@@ -84,7 +156,7 @@ paths:
         '200':
           description: OK
     post:
-      summary: Set system config (admin)
+      summary: Set system config (admin), supports bcv_rate, tax_percent, installment_interest_percent, company_name, company_tax_id
       responses:
         '201':
           description: Created

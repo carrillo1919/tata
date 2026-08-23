@@ -6,6 +6,8 @@ import {
   Order,
   OrderItem,
   Installment,
+  Payment,
+  Shipment,
 } from '../models/index.js';
 import { AppError } from '../utils/errors.js';
 import { checkoutSchema } from '../validators/checkoutValidator.js';
@@ -91,6 +93,7 @@ export async function createCheckout(req, res, next) {
       totalUsd,
       bcvRate,
       paymentType: payload.paymentType,
+      billingData: payload.billingData,
     }, { transaction });
 
     const orderItemsPayload = items.map((item) => ({
@@ -144,6 +147,12 @@ export async function listMyOrders(req, res, next) {
   try {
     const orders = await Order.findAll({
       where: { userId: req.user.id },
+      include: [
+        { model: OrderItem, include: [Product] },
+        { model: Installment },
+        { model: Payment },
+        { model: Shipment },
+      ],
       order: [['createdAt', 'DESC']],
     });
     res.json({ ok: true, data: orders });
