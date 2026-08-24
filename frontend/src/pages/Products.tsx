@@ -66,7 +66,7 @@ const Products = () => {
     }
 
     return result;
-  }, [activeCollection, activeSort]);
+  }, [activeCollection, activeSort, collections, products]);
 
   const currentCollection = activeCollection !== "all"
     ? collections.find((collection) => collection.slug === activeCollection)
