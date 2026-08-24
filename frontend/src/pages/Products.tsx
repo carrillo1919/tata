@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
-import { products, collections, getCollectionBySlug } from "@/data/products";
+import { collections as fallbackCollections, products as fallbackProducts } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useCatalog } from "@/hooks/useCatalog";
 
 type SortOption = "featured" | "newest" | "price-asc" | "price-desc" | "name-asc";
 
@@ -26,6 +27,9 @@ const sortOptions: { value: SortOption; label: string }[] = [
 ];
 
 const Products = () => {
+  const { data, isLoading } = useCatalog();
+  const products = data?.products?.length ? data.products : fallbackProducts;
+  const collections = data?.collections?.length ? data.collections : fallbackCollections;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCollection = searchParams.get("collection") || "all";
   const activeSort = (searchParams.get("sort") as SortOption) || "featured";
@@ -65,7 +69,7 @@ const Products = () => {
   }, [activeCollection, activeSort]);
 
   const currentCollection = activeCollection !== "all"
-    ? getCollectionBySlug(activeCollection)
+    ? collections.find((collection) => collection.slug === activeCollection)
     : null;
 
   const handleFilterChange = (slug: string) => {
@@ -204,6 +208,7 @@ const Products = () => {
                   <ProductCard
                     key={product.id}
                     product={product}
+                    collections={collections}
                     index={index}
                   />
                 ))}
@@ -212,10 +217,10 @@ const Products = () => {
           ) : (
             <div className="text-center py-28">
               <p className="font-serif text-2xl text-muted-foreground mb-4">
-                No se encontraron productos
+                {isLoading ? "Cargando productos..." : "No se encontraron productos"}
               </p>
               <p className="text-muted-foreground mb-8">
-                Esta categoría está siendo actualizada.
+                {isLoading ? "Esperando datos del backend." : "Esta categoría está siendo actualizada."}
               </p>
               <Button
                 asChild

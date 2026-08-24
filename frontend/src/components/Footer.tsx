@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { collections } from "@/data/products";
+import { collections as fallbackCollections } from "@/data/products";
+import { useCatalog } from "@/hooks/useCatalog";
 
 export const Footer = () => {
+  const { data } = useCatalog();
+  const collections = data?.collections?.length ? data.collections : fallbackCollections;
+
   return (
     <footer className="bg-foreground text-background">
       {/* Top bar */}

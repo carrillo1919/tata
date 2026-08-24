@@ -5,16 +5,20 @@ import { Heart, ChevronLeft, ChevronRight, ArrowRight, ShoppingBag } from "lucid
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { QuantitySelector } from "@/components/QuantitySelector";
-import { getProductBySlug, getRelatedProducts, collections } from "@/data/products";
+import { collections as fallbackCollections, products as fallbackProducts } from "@/data/products";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useCatalog } from "@/hooks/useCatalog";
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const product = getProductBySlug(slug || "");
+  const { data, isLoading } = useCatalog();
+  const products = data?.products?.length ? data.products : fallbackProducts;
+  const collections = data?.collections?.length ? data.collections : fallbackCollections;
+  const product = products.find((item) => item.slug === (slug || ""));
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlist();
@@ -25,9 +29,11 @@ const ProductDetail = () => {
     return (
       <Layout>
         <div className="container-wide py-28 text-center">
-          <h1 className="font-serif text-4xl mb-4">Product Not Found</h1>
+          <h1 className="font-serif text-4xl mb-4">{isLoading ? "Cargando..." : "Product Not Found"}</h1>
           <p className="text-muted-foreground mb-8">
-            The piece you're looking for doesn't exist.
+            {isLoading
+              ? "Esperando información del backend."
+              : "The piece you're looking for doesn't exist."}
           </p>
           <Button asChild className="rounded-none px-8 text-sm tracking-[0.1em] uppercase">
             <Link to="/products">Browse All Products</Link>
@@ -38,7 +44,9 @@ const ProductDetail = () => {
   }
 
   const inWishlist = isInWishlist(product.id);
-  const relatedProducts = getRelatedProducts(product.id);
+  const relatedProducts = products
+    .filter((item) => item.collection === product.collection && item.id !== product.id)
+    .slice(0, 4);
   const collection = collections.find((c) => c.id === product.collection);
 
   const handleWishlistToggle = () => {
@@ -329,6 +337,7 @@ const ProductDetail = () => {
                 <ProductCard
                   key={product.id}
                   product={product}
+                  collections={collections}
                   index={index}
                 />
               ))}

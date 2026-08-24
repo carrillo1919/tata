@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWishlist } from "@/hooks/useWishlist";
 import { CartIcon } from "@/components/CartIcon";
-import { collections } from "@/data/products";
+import { collections as fallbackCollections } from "@/data/products";
+import { useCatalog } from "@/hooks/useCatalog";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,6 +25,8 @@ export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { items } = useWishlist();
+  const { data } = useCatalog();
+  const collections = data?.collections?.length ? data.collections : fallbackCollections;
 
   useEffect(() => {
     const handleScroll = () => {

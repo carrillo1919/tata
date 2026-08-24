@@ -1,17 +1,23 @@
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
-import { Product, collections } from "@/data/products";
+import { Product, Collection, collections as fallbackCollections } from "@/data/products";
 import { useWishlist } from "@/hooks/useWishlist";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
+  collections?: Collection[];
   index?: number;
   variant?: "default" | "large";
 }
 
-export const ProductCard = ({ product, index = 0, variant = "default" }: ProductCardProps) => {
+export const ProductCard = ({
+  product,
+  collections = fallbackCollections,
+  index = 0,
+  variant = "default",
+}: ProductCardProps) => {
   const { addItem, removeItem, isInWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
   const collection = collections.find((c) => c.id === product.collection);

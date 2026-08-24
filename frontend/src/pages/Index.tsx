@@ -5,14 +5,18 @@ import { useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { CollectionCard } from "@/components/CollectionCard";
-import { collections, getNewProducts, products } from "@/data/products";
+import { collections as fallbackCollections, products as fallbackProducts } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { useCatalog } from "@/hooks/useCatalog";
 
 const Index = () => {
-  const newProducts = getNewProducts();
+  const { data } = useCatalog();
+  const products = data?.products?.length ? data.products : fallbackProducts;
+  const collections = data?.collections?.length ? data.collections : fallbackCollections;
+  const newProducts = products.filter((product) => product.new);
   const latestProducts = products.slice(0, 4);
   const displayedCollections = collections.slice(0, 6);
-  const featuredCollection = collections[0]; // Lighting
+  const featuredCollection = collections[0];
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -104,6 +108,7 @@ const Index = () => {
       </section>
 
       {/* Featured Collection */}
+      {featuredCollection && (
       <section className="py-20 md:py-28">
         <div className="container-full">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -153,6 +158,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Latest Products */}
       <section className="py-20 md:py-28 bg-linen">
@@ -182,7 +188,7 @@ const Index = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
             {latestProducts.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
+              <ProductCard key={product.id} product={product} collections={collections} index={index} />
             ))}
           </div>
 
@@ -218,49 +224,23 @@ const Index = () => {
 
           {/* Asymmetric grid layout */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-            {/* First row: 2 items */}
-            <div className="md:col-span-7">
-              <CollectionCard
-                collection={displayedCollections[0]}
-                index={0}
-                variant="wide"
-              />
-            </div>
-            <div className="md:col-span-5">
-              <CollectionCard
-                collection={displayedCollections[1]}
-                index={1}
-              />
-            </div>
-
-            {/* Second row: 3 items */}
-            <div className="md:col-span-4">
-              <CollectionCard
-                collection={displayedCollections[2]}
-                index={2}
-              />
-            </div>
-            <div className="md:col-span-4">
-              <CollectionCard
-                collection={displayedCollections[3]}
-                index={3}
-              />
-            </div>
-            <div className="md:col-span-4">
-              <CollectionCard
-                collection={displayedCollections[4]}
-                index={4}
-              />
-            </div>
-
-            {/* Third row: 1 wide item */}
-            <div className="md:col-span-12">
-              <CollectionCard
-                collection={displayedCollections[5]}
-                index={5}
-                variant="wide"
-              />
-            </div>
+            {displayedCollections.map((collection, index) => (
+              <div
+                key={collection.id}
+                className={
+                  index === 0 ? "md:col-span-7" :
+                  index === 1 ? "md:col-span-5" :
+                  index <= 4 ? "md:col-span-4" :
+                  "md:col-span-12"
+                }
+              >
+                <CollectionCard
+                  collection={collection}
+                  index={index}
+                  variant={index === 0 || index === 5 ? "wide" : "default"}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
