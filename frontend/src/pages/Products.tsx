@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
-import { products, collections, getCollectionBySlug } from "@/data/products";
+import { collections, getCollectionBySlug } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -30,8 +31,10 @@ const Products = () => {
   const activeCollection = searchParams.get("collection") || "all";
   const activeSort = (searchParams.get("sort") as SortOption) || "featured";
 
+  const { data: productsList = [], isLoading } = useProducts();
+
   const filteredAndSortedProducts = useMemo(() => {
-    let result = [...products];
+    let result = [...productsList];
 
     // Filter by collection
     if (activeCollection !== "all") {
@@ -62,7 +65,7 @@ const Products = () => {
     }
 
     return result;
-  }, [activeCollection, activeSort]);
+  }, [activeCollection, activeSort, productsList]);
 
   const currentCollection = activeCollection !== "all"
     ? getCollectionBySlug(activeCollection)
@@ -191,7 +194,11 @@ const Products = () => {
       {/* Products Grid */}
       <section className="py-14 md:py-20">
         <div className="container-full">
-          {filteredAndSortedProducts.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center py-20">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            </div>
+          ) : filteredAndSortedProducts.length > 0 ? (
             <>
               <div className="flex items-center justify-between mb-10">
                 <p className="text-sm text-muted-foreground">

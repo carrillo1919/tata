@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Heart, Menu, X } from "lucide-react";
+import { Heart, Menu, X, User as UserIcon, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/hooks/useAuth";
 import { CartIcon } from "@/components/CartIcon";
 import { collections } from "@/data/products";
 import {
@@ -24,6 +25,7 @@ export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { items } = useWishlist();
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -144,6 +146,53 @@ export const Header = () => {
               </TooltipContent>
             </Tooltip>
 
+            {/* User Account Icon */}
+            {isAuthenticated ? (
+              <div className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to="/dashboard"
+                      className="p-2 hover:bg-accent transition-colors duration-300 rounded-none text-foreground"
+                    >
+                      <UserIcon className="w-5 h-5" />
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p className="text-xs font-semibold">Mi Cuenta (Dashboard)</p>
+                  </TooltipContent>
+                </Tooltip>
+                
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => logout()}
+                      className="p-2 hover:bg-accent text-destructive transition-colors duration-300 rounded-none"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p className="text-xs font-semibold">Cerrar Sesión</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to="/login"
+                    className="p-2 hover:bg-accent transition-colors duration-300 rounded-none text-foreground"
+                  >
+                    <UserIcon className="w-5 h-5" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p className="text-xs font-semibold">Iniciar Sesión / Registrarse</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+
             {/* Cart Icon */}
             <CartIcon />
 
@@ -216,6 +265,12 @@ export const Header = () => {
                     { to: "/products", label: "Catálogo" },
                     { to: "/about", label: "Nosotros" },
                     { to: "/cart", label: "Carrito" },
+                    ...(isAuthenticated
+                      ? [
+                          { to: "/dashboard", label: "Mi Cuenta" },
+                          { to: "#logout", label: "Cerrar Sesión", onClick: () => logout() },
+                        ]
+                      : [{ to: "/login", label: "Iniciar Sesión" }]),
                   ].map((link, i) => (
                     <motion.div
                       key={link.to}
@@ -223,13 +278,25 @@ export const Header = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3 + i * 0.05 }}
                     >
-                      <Link
-                        to={link.to}
-                        className="block px-2 py-2.5 text-sm font-medium hover:bg-accent transition-colors duration-300"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {link.label}
-                      </Link>
+                      {link.onClick ? (
+                        <button
+                          onClick={() => {
+                            link.onClick?.();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="w-full text-left block px-2 py-2.5 text-sm font-medium hover:bg-accent text-destructive transition-colors duration-300"
+                        >
+                          {link.label}
+                        </button>
+                      ) : (
+                        <Link
+                          to={link.to}
+                          className="block px-2 py-2.5 text-sm font-medium hover:bg-accent transition-colors duration-300"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      )}
                     </motion.div>
                   ))}
                 </div>
