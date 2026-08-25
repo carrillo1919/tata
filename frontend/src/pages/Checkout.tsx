@@ -4,17 +4,30 @@ import { motion } from "framer-motion";
 import { ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/lib/api";
 import { DollarRatePanel } from "@/components/DollarRatePanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { items, getSubtotal, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentType, setPaymentType] = useState<"contado" | "cuotas">("contado");
+  const [installments, setInstallments] = useState("3");
+  const [installmentIntervalDays, setInstallmentIntervalDays] = useState("30");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,6 +43,37 @@ const Checkout = () => {
   const subtotal = getSubtotal();
   const shipping = subtotal > 500 ? 0 : 25;
   const total = subtotal + shipping;
+
+  if (!isAuthenticated) {
+    return (
+      <Layout>
+        <div className="container-narrow py-28 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="font-serif text-4xl mb-4">Inicia Sesión para Comprar</h1>
+            <p className="text-muted-foreground mb-8">
+              Necesitas iniciar sesión o registrarte para completar tu pedido en Tata.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button asChild size="lg" className="rounded-none px-8 text-sm tracking-[0.1em] uppercase btn-premium">
+                <Link to="/login" state={{ from: { pathname: "/checkout" } }}>
+                  Iniciar Sesión
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-none px-8 text-sm tracking-[0.1em] uppercase border-foreground text-foreground">
+                <Link to="/register">
+                  Registrarse
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -71,18 +115,43 @@ const Checkout = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const payload = {
+      paymentType,
+      shippingUsd: shipping,
+      billingData: {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        address: `${formData.address}, ${formData.city}, ${formData.postalCode}, ${formData.country}`,
+      },
+      ...(paymentType === "cuotas"
+        ? {
+            installments: Number(installments),
+            installmentIntervalDays: Number(installmentIntervalDays),
+          }
+        : {}),
+    };
 
-    toast({
-      title: "Order Request Submitted",
-      description:
-        "Thank you! We'll contact you shortly to complete your order.",
-    });
-
-    clearCart();
-    setIsSubmitting(false);
-    navigate("/");
+    try {
+      const response = await api.post<{ ok: boolean }>("/api/checkout", payload);
+      if (response.ok) {
+        toast({
+          title: "Pedido Realizado con Éxito",
+          description: "¡Gracias por tu compra! Tu orden ha sido registrada en el sistema.",
+        });
+        clearCart();
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Por favor verifica los datos ingresados.";
+      toast({
+        variant: "destructive",
+        title: "Error al realizar pedido",
+        description: errorMsg,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -279,6 +348,67 @@ const Checkout = () => {
                         />
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {/* Payment Plan Options */}
+                <div>
+                  <h2 className="font-serif text-xl mb-6">Plan de Pago</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2">
+                        Tipo de Pago *
+                      </label>
+                      <Select
+                        value={paymentType}
+                        onValueChange={(value) => setPaymentType(value as "contado" | "cuotas")}
+                      >
+                        <SelectTrigger className="rounded-none h-12 bg-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="contado">Pago Único (Al Contado)</SelectItem>
+                          <SelectItem value="cuotas">Pago en Cuotas (Financiamiento)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {paymentType === "cuotas" && (
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2">
+                            Número de Cuotas *
+                          </label>
+                          <Select value={installments} onValueChange={setInstallments}>
+                            <SelectTrigger className="rounded-none h-12 bg-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white">
+                              <SelectItem value="2">2 Cuotas</SelectItem>
+                              <SelectItem value="3">3 Cuotas</SelectItem>
+                              <SelectItem value="6">6 Cuotas</SelectItem>
+                              <SelectItem value="12">12 Cuotas</SelectItem>
+                              <SelectItem value="24">24 Cuotas</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2">
+                            Frecuencia de Cuotas (Días) *
+                          </label>
+                          <Select value={installmentIntervalDays} onValueChange={setInstallmentIntervalDays}>
+                            <SelectTrigger className="rounded-none h-12 bg-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white">
+                              <SelectItem value="7">Cada 7 Días (Semanal)</SelectItem>
+                              <SelectItem value="15">Cada 15 Días (Quincenal)</SelectItem>
+                              <SelectItem value="30">Cada 30 Días (Mensual)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
